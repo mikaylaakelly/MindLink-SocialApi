@@ -1,5 +1,4 @@
 const { ObjectId } = require('mongoose').Types;
-const { ReturnDocument } = require('mongodb');
 const { User, Thought } = require('../models');
 
 //aggregate function
