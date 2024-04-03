@@ -10,17 +10,28 @@ const {
     deleteReaction,
 } = require('../../controllers/thoughtControllers.js');
 
-router.route('/').get(getThoughts).post(createThought);
 
+///     api/thoughts
+router.route('/').get(getAllThoughts).post(createThought);
+
+
+/// api/thoughts/:thoughtId
 router
     .route('/:thoughtId')
     .get(getSingleThought)
     .put(updateThought)
     .delete(deleteThought)
 
-    router.route('/:thoughtId/reaction').post(addReaction);
 
-    router.route('/:thoughtId/readtion/:reactionId').delete(deleteReaction)
+    ///    api/thoughts/:thoughtId:/reaction
+
+    router.route('/:thoughtId/reaction').post(addReaction)
+
+
+    ////    api/thoughts/:thoughtId/reaction/:reactionId
+    router.route('/:thoughtId/reaction/:reactionId').delete(deleteReaction)
 
 
     ///colons were needed in front of thoughtId (i.e /:thoughtId)
+
+    module.exports = router;
