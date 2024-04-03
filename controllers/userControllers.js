@@ -50,6 +50,25 @@ module.exports = {
         }
     }, 
 
+    async updateUser(req, res) {
+        try {
+            const updatedUser = await User.findOneAndUpdate(
+                { _id: req.params.userId },
+                { $set: req.body },
+                { new: true }
+            );
+    
+            if (!updatedUser) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+    
+            res.json({ message: 'User updated successfully', user: updatedUser });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    },
+
     async deleteUser(req, res) {
         try {
             const user = await User.findOneAndDelete({_id: req.params.userId});

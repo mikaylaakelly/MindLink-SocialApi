@@ -69,12 +69,21 @@ module.exports = {
     async addReaction(req, res) {
         try {
             const { reactionBody, username } = req.body;
-            const newReaction = await Reaction.create({reactionBody, username});
-            const updatedThought = await Thought.findOneAndUpdate(
-                {_id: req.params.thoughtId },
-                { $push: {reactions: newReaction._id} },
-                {new: true}
+            
+            // Create the reaction
+            const newReaction = await Reaction.create({ reactionBody, username });
+            
+            // Find the corresponding thought and update it to include the new reaction
+            const updatedThought = await Thought.findByIdAndUpdate(
+                req.params.thoughtId,
+                { $push: { reactions: newReaction } },
+                { new: true }
             );
+    
+            if (!updatedThought) {
+                return res.status(404).json({ message: 'Thought not found' });
+            }
+    
             res.json(updatedThought);
         } catch (err) {
             res.status(500).json(err);
@@ -83,14 +92,14 @@ module.exports = {
     //delete a reaction
     async deleteReaction(req, res) {
         try {
-            const deleteReaction = await Thought.findOneAndUpdate({_id: req.params.reactionId});
-            if(!deleteReaction) {
-                return res.staus(404).json({message: 'Hmmmm.. This reaction was not found.'});
+            const deletedReaction = await Reaction.findOneAndDelete({_id: req.params.reactionId});
+            if(!deletedReaction) {
+                return res.status(404).json({message: 'Hmmmm.. This reaction was not found.'});
             }
             res.json({message: 'Reaction terminated!'});
         } catch (err) {
             res.status(500).json(err);
         }
-    },
+    }
 
 };
